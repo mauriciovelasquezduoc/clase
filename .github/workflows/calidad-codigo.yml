@@ -50,7 +50,7 @@ jobs:
           cache: maven
 
       - name: Verificar formato con Spotless
-        run: ./mvn --batch-mode spotless:check
+        run: mvn --batch-mode spotless:check
 
   checkstyle:
     name: Checkstyle (convenciones de código)
@@ -68,7 +68,7 @@ jobs:
           cache: maven
 
       - name: Verificar convenciones con Checkstyle
-        run: ./mvn --batch-mode checkstyle:check
+        run: mvn --batch-mode checkstyle:check
 
   pmd:
     name: PMD (code smells)
@@ -86,7 +86,7 @@ jobs:
           cache: maven
 
       - name: Analizar code smells con PMD
-        run: ./mvn --batch-mode pmd:check
+        run: mvn --batch-mode pmd:check
 
       - name: Subir reporte de PMD
         if: always()
@@ -112,7 +112,7 @@ jobs:
           cache: maven
 
       - name: Analizar bugs con SpotBugs
-        run: ./mvn --batch-mode compile spotbugs:check
+        run: mvn --batch-mode compile spotbugs:check
 
       - name: Subir reporte de SpotBugs
         if: always()
@@ -138,7 +138,7 @@ jobs:
           cache: maven
 
       - name: Ejecutar pruebas unitarias
-        run: ./mvn --batch-mode test
+        run: mvn --batch-mode test
 
       - name: Subir reportes de pruebas
         if: always()
@@ -164,7 +164,7 @@ jobs:
           cache: maven
 
       - name: Ejecutar pruebas de mutación con PIT
-        run: ./mvn --batch-mode test-compile org.pitest:pitest-maven:mutationCoverage
+        run: mvn --batch-mode test-compile org.pitest:pitest-maven:mutationCoverage
 
       - name: Subir reporte de PIT
         if: always()
@@ -190,7 +190,7 @@ jobs:
           cache: maven
 
       - name: Verificar cobertura con JaCoCo
-        run: ./mvn --batch-mode test jacoco:report jacoco:check
+        run: mvn --batch-mode test jacoco:report jacoco:check
 
       - name: Subir reporte de JaCoCo
         if: always()
@@ -226,7 +226,7 @@ jobs:
             echo "::warning::SONAR_TOKEN/SONAR_HOST_URL no configurados; se omite el análisis de SonarQube."
             exit 0
           fi
-          ./mvn --batch-mode test jacoco:report sonar:sonar
+          mvn --batch-mode test jacoco:report sonar:sonar
 
   snyk:
     name: Snyk (seguridad de dependencias)
@@ -265,7 +265,7 @@ jobs:
           cache: maven
 
       - name: Ejecutar pruebas BDD con Cucumber
-        run: ./mvn --batch-mode test -Dtest=CucumberRunnerTest
+        run: mvn --batch-mode test -Dtest=CucumberRunnerTest
 
   container:
     name: Contenedor (Docker + Trivy)
@@ -303,7 +303,7 @@ jobs:
 
       - name: Levantar la aplicación
         run: |
-          nohup ./mvn -q -DskipTests spring-boot:run > app.log 2>&1 &
+          nohup mvn -q -DskipTests spring-boot:run > app.log 2>&1 &
           for i in $(seq 1 60); do
             if curl -sf http://localhost:8080/ >/dev/null; then echo "Aplicación lista"; exit 0; fi
             sleep 2
@@ -353,7 +353,7 @@ jobs:
 
       - name: Levantar la aplicación
         run: |
-          nohup ./mvn -q -DskipTests spring-boot:run > app.log 2>&1 &
+          nohup mvn -q -DskipTests spring-boot:run > app.log 2>&1 &
           for i in $(seq 1 60); do
             if curl -sf http://localhost:8080/ >/dev/null; then echo "Aplicación lista"; exit 0; fi
             sleep 2
@@ -363,7 +363,7 @@ jobs:
           exit 1
 
       - name: Ejecutar Gatling
-        run: ./mvn --batch-mode gatling:test
+        run: mvn --batch-mode gatling:test
 
       - name: Subir reporte de Gatling
         if: always()
@@ -404,7 +404,7 @@ jobs:
 
       - name: Levantar la aplicación
         run: |
-          nohup ./mvn -q -DskipTests spring-boot:run > app.log 2>&1 &
+          nohup mvn -q -DskipTests spring-boot:run > app.log 2>&1 &
           for i in $(seq 1 60); do
             if curl -sf http://localhost:8080/ >/dev/null; then echo "Aplicación lista"; exit 0; fi
             sleep 2
@@ -414,7 +414,7 @@ jobs:
           exit 1
 
       - name: Ejecutar JMeter
-        run: ./mvn --batch-mode -Pjmeter jmeter:configure@configuration jmeter:jmeter@jmeter-tests jmeter:results@jmeter-check-results
+        run: mvn --batch-mode -Pjmeter jmeter:configure@configuration jmeter:jmeter@jmeter-tests jmeter:results@jmeter-check-results
 
       - name: Subir resultados de JMeter
         if: always()
